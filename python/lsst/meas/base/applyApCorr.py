@@ -194,7 +194,7 @@ class ApplyApCorrTask(lsst.pipe.base.Task):
                 # log statistics on the effects of aperture correction
                 apCorrArr = numpy.array([s.get(apCorrInfo.apCorrKey) for s in catalog])
                 apCorrSigmaArr = numpy.array([s.get(apCorrInfo.apCorrSigmaKey) for s in catalog])
-                self.log.logdebug("For flux field %r: mean apCorr=%s, stdDev apCorr=%s,"
+                self.log.debug("For flux field %r: mean apCorr=%s, stdDev apCorr=%s,"
                     " mean apCorrSigma=%s, stdDev apCorrSigma=%s for %s sources" %
                     (apCorrInfo.name, apCorrArr.mean(), apCorrArr.std(),
                     apCorrSigmaArr.mean(), apCorrSigmaArr.std(), len(catalog)))
