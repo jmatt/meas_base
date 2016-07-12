@@ -181,7 +181,7 @@ class FlagHandlerTestCase(AlgorithmTestCase):
         schema = self.dataset.makeMinimalSchema()
         task = lsst.meas.base.SingleFrameMeasurementTask(schema=schema, config=self.config)
         exposure, cat = self.dataset.realize(noise=100.0, schema=schema)
-        task.log.setThreshold(task.log.FATAL)
+        task.log.setLevel(task.log.FATAL)
         task.run(cat, exposure)
         source = cat[0]
         self.assertEqual(source.get(self.algName + "_flag"), True)
