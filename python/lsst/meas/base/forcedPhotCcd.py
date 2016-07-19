@@ -24,7 +24,7 @@ import collections
 
 import lsst.pex.config
 import lsst.pex.exceptions
-import lsst.pex.logging
+from lsst.log import Log
 import lsst.pipe.base
 import lsst.afw.image
 import lsst.afw.table
@@ -64,14 +64,14 @@ class PerTractCcdDataIdContainer(lsst.pipe.base.DataIdContainer):
         """
         if self.datasetType is None:
             raise RuntimeError("Must call setDatasetType first")
-        log = lsst.pex.logging.Log.getDefaultLog()
+        log = Log.getDefaultLog() # really? no name?
         skymap = None
         visitTract = collections.defaultdict(set)   # Set of tracts for each visit
         visitRefs = collections.defaultdict(list)   # List of data references for each visit
         for dataId in self.idList:
             if "tract" not in dataId:
                 # Discover which tracts the data overlaps
-                log.info("Reading WCS for components of dataId=%s to determine tracts" % (dict(dataId),))
+                log.info("Reading WCS for components of dataId=%s to determine tracts", dict(dataId))
                 if skymap is None:
                     skymap = namespace.butler.get(namespace.config.coaddName + "Coadd_skyMap")
 
@@ -106,7 +106,7 @@ class PerTractCcdDataIdContainer(lsst.pipe.base.DataIdContainer):
             tractCounter = collections.Counter()
             for tractSet in visitTract.itervalues():
                 tractCounter.update(tractSet)
-            log.info("Number of visits for each tract: %s" % (dict(tractCounter),))
+            log.info("Number of visits for each tract: %s", dict(tractCounter))
 
 
 def overlapsTract(tract, imageWcs, imageBox):
@@ -214,10 +214,10 @@ class ForcedPhotCcdTask(ProcessImageForcedTask):
         for record in unfiltered:
             if record.getFootprint() is None or record.getFootprint().getArea() == 0:
                 if record.getParent() != 0:
-                    self.log.warn("Skipping reference %s (child of %s) with bad Footprint" %
-                    (record.getId(), record.getParent()))
+                    self.log.warn("Skipping reference %s (child of %s) with bad Footprint",
+                    record.getId(), record.getParent())
                 else:
-                    self.log.warn("Skipping reference parent %s with bad Footprint" % (record.getId(),))
+                    self.log.warn("Skipping reference parent %s with bad Footprint", record.getId())
                     badParents.add(record.getId())
             elif record.getParent() not in badParents:
                 references.append(record)

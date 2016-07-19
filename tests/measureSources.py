@@ -36,7 +36,7 @@ import unittest
 import numpy
 
 import lsst.utils.tests as tests
-import lsst.pex.logging as pexLogging
+from lsst.log import Log
 import lsst.pex.exceptions
 import lsst.daf.base as dafBase
 import lsst.afw.detection as afwDetection
@@ -49,8 +49,8 @@ import lsst.meas.base as measBase
 try:
     type(verbose)
 except NameError:
-    verbose = 0
-pexLogging.Trace_setVerbosity("afwDetection.Measure", verbose)
+    verbose = Log.INFO
+Log.getLogger("afwDetection.Measure").setLevel(verbose)
 
 try:
     type(display)
