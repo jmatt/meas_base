@@ -251,7 +251,7 @@ class FlagHandlerTestCase(AlgorithmTestCase):
         schema = self.dataset.makeMinimalSchema()
         task = lsst.meas.base.SingleFrameMeasurementTask(schema=schema, config=self.config)
         exposure, cat = self.dataset.realize(noise=100.0, schema=schema)
-        task.log.setThreshold(task.log.FATAL)
+        task.log.setLevel(task.log.FATAL)
         task.run(cat, exposure)
         source = cat[0]
         self.assertEqual(source.get(self.algName + "_flag"), True)
@@ -281,7 +281,7 @@ class FlagHandlerTestCase(AlgorithmTestCase):
         exposure, cat = self.dataset.realize(noise=100.0, schema=schema)
         # Set the size large enough to trigger the edge error
         self.config.plugins[self.algName].size = exposure.getDimensions()[1]//2
-        task.log.setThreshold(task.log.FATAL)
+        task.log.setLevel(task.log.FATAL)
         task.run(cat, exposure)
         source = cat[0]
         self.assertEqual(source.get(self.algName + "_flag"), True)
@@ -295,7 +295,7 @@ class FlagHandlerTestCase(AlgorithmTestCase):
         # Normal case should use the centroid slot to get the center, which should succeed
         schema = self.dataset.makeMinimalSchema()
         task = lsst.meas.base.SingleFrameMeasurementTask(schema=schema, config=self.config)
-        task.log.setThreshold(task.log.FATAL)
+        task.log.setLevel(task.log.FATAL)
         exposure, cat = self.dataset.realize(noise=0.0, schema=schema)
         source = cat[0]
         task.run(cat, exposure)

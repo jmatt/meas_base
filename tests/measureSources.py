@@ -37,6 +37,7 @@ import numpy
 
 import lsst.utils.tests as tests
 import lsst.pex.logging as pexLogging
+from lsst.log import Log
 import lsst.pex.exceptions
 import lsst.daf.base as dafBase
 import lsst.afw.detection as afwDetection
@@ -51,6 +52,7 @@ try:
 except NameError:
     verbose = 0
 pexLogging.Trace_setVerbosity("afwDetection.Measure", verbose)
+Log.getLogger("afwDetection.Measure").setLevel(Log.INFO)
 
 try:
     type(display)

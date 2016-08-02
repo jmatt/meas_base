@@ -80,7 +80,7 @@ class NoiseReplacer(object):
         @param[in]      footprints   dict of {id: (parent, footprint)};
         @param[in]      noiseImage   an afw.image.ImageF used as a predictable noise replacement source
                                      (for tests only)
-        @param[in]      log          pex.logging.Log object to use for status messages; no status messages
+        @param[in]      log          Log object to use for status messages; no status messages
                                      will be printed if None
 
         'footprints' is a dict of {id: (parent, footprint)}; when used in SFM, the ID will be the
@@ -118,7 +118,7 @@ class NoiseReplacer(object):
             try:
                 # does it already exist?
                 plane = mask.getMaskPlane(maskname)
-                if self.log: self.log.logdebug('Mask plane "%s" already existed' % maskname)
+                if self.log: self.log.trace('Mask plane "%s" already existed', maskname)
             except:
                 # if not, add it; we should delete it when done.
                 plane = mask.addMaskPlane(maskname)
@@ -126,8 +126,8 @@ class NoiseReplacer(object):
             mask.clearMaskPlane(plane)
             bitmask = mask.getPlaneBitMask(maskname)
             bitmasks.append(bitmask)
-            if self.log: self.log.logdebug('Mask plane "%s": plane %i, bitmask %i = 0x%x'
-                % (maskname, plane, bitmask, bitmask))
+            if self.log: self.log.trace('Mask plane "%s": plane %i, bitmask %i = 0x%x',
+                                        maskname, plane, bitmask, bitmask)
         self.thisbitmask,self.otherbitmask = bitmasks
         del bitmasks
         self.heavies = {}
@@ -160,7 +160,7 @@ class NoiseReplacer(object):
         #  The noiseGenMean and Std are used by the unit tests
         self.noiseGenMean = noisegen.mean
         self.noiseGenStd = noisegen.std
-        if self.log: self.log.logdebug('Using noise generator: %s' % (str(noisegen)))
+        if self.log: self.log.trace('Using noise generator: %s', str(noisegen))
         for id in self.heavies.keys():
             fp = footprints[id][1]
             noiseFp = noisegen.getHeavyFootprint(fp)
@@ -268,12 +268,12 @@ class NoiseReplacer(object):
                 noiseMean = float(noiseMean)
                 noiseVar = float(noiseVar)
                 noiseStd = math.sqrt(noiseVar)
-                if self.log: self.log.logdebug('Using passed-in noise mean = %g, variance = %g -> stdev %g'
-                     % (noiseMean, noiseVar, noiseStd))
+                if self.log: self.log.trace('Using passed-in noise mean = %g, variance = %g -> stdev %g',
+                                            noiseMean, noiseVar, noiseStd)
                 return FixedGaussianNoiseGenerator(noiseMean, noiseStd, rand=rand)
             except:
-                if self.log: self.log.logdebug('Failed to cast passed-in noiseMeanVar to floats: %s'
-                    % (str(noiseMeanVar)))
+                if self.log: self.log.trace('Failed to cast passed-in noiseMeanVar to floats: %s',
+                                            str(noiseMeanVar))
         offset = self.noiseOffset
         noiseSource = self.noiseSource
 
@@ -285,14 +285,14 @@ class NoiseReplacer(object):
                 bgMean = meta.getAsDouble('BGMEAN')
                 # We would have to adjust for GAIN if ip_isr didn't make it 1.0
                 noiseStd = math.sqrt(bgMean)
-                if self.log: self.log.logdebug('Using noise variance = (BGMEAN = %g) from exposure metadata'
-                    % (bgMean))
+                if self.log: self.log.trace('Using noise variance = (BGMEAN = %g) from exposure metadata',
+                                            bgMean)
                 return FixedGaussianNoiseGenerator(offset, noiseStd, rand=rand)
             except:
-                if self.log: self.log.logdebug('Failed to get BGMEAN from exposure metadata')
+                if self.log: self.log.trace('Failed to get BGMEAN from exposure metadata')
 
         if noiseSource == 'variance':
-            if self.log: self.log.logdebug('Will draw noise according to the variance plane.')
+            if self.log: self.log.trace('Will draw noise according to the variance plane.')
             var = exposure.getMaskedImage().getVariance()
             return VariancePlaneNoiseGenerator(var, mean=offset, rand=rand)
 
@@ -301,8 +301,8 @@ class NoiseReplacer(object):
         s = afwMath.makeStatistics(im, afwMath.MEANCLIP | afwMath.STDEVCLIP)
         noiseMean = s.getValue(afwMath.MEANCLIP)
         noiseStd = s.getValue(afwMath.STDEVCLIP)
-        if self.log: self.log.logdebug("Measured from image: clipped mean = %g, stdev = %g"
-            % (noiseMean,noiseStd))
+        if self.log: self.log.trace("Measured from image: clipped mean = %g, stdev = %g",
+                                    noiseMean,noiseStd)
         return FixedGaussianNoiseGenerator(noiseMean + offset, noiseStd, rand=rand)
 
 class NoiseReplacerList(list):
