@@ -1,8 +1,8 @@
-# 
+#
 # LSST Data Management System
 #
 # Copyright 2008-2016  AURA/LSST.
-# 
+#
 # This product includes software developed by the
 # LSST Project (http://www.lsst.org/).
 #
@@ -10,14 +10,14 @@
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
 # (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
-# You should have received a copy of the LSST License Statement and 
-# the GNU General Public License along with this program.  If not, 
+#
+# You should have received a copy of the LSST License Statement and
+# the GNU General Public License along with this program.  If not,
 # see <https://www.lsstcorp.org/LegalNotices/>.
 #
 
@@ -47,7 +47,7 @@ class BasePlugin(object):
     SHAPE_ORDER = 1.0
     FLUX_ORDER = 2.0
     APCORR_ORDER = 3.0
-    DEFAULT_AFTERBURNER = 4.0
+    DEFAULT_CATALOGCALCULATION = 4.0
 
     @classmethod
     def getExecutionOrder(cls):
@@ -60,7 +60,7 @@ class BasePlugin(object):
                             a good centroid (in addition to a Footprint and its Peaks).
         FLUX_ORDER          flux algorithms that require both getShape() and getCentroid(),
                             in addition to a Footprint and its Peaks
-        DEFAULT_AFTERBURNER plugins that only operate on the catalog
+        DEFAULT_CATALOGCALCULATION plugins that only operate on the catalog
 
         Must be reimplemented as a class method by concrete derived classes.
 
